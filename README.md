@@ -44,5 +44,5 @@ O objetivo é oferecer uma interface moderna e intuitiva para acesso a livros di
 
 ### Autores
 ### 👨‍💻 Autores  
-- [Adriel Rodrigues](https://github.com/ArielDev22)  
+- [Ariel Rodrigues](https://github.com/ArielDev22)  
 - [Davi Soares](https://github.com/DaviSoaresLM)  
