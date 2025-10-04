@@ -1,203 +1,113 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../Styles/RegistroUsuario.css'; 
+import livroIcon from '../assets/fotoLivro.png'; 
 
-export default function RegistroUsuario() {
+const RegistroUsuario = () => {
   const [formData, setFormData] = useState({
-    nome: "",
-    sobrenome: "",
-    email: "",
-    senha: "",
-    confirmarSenha: "",
+    nome: '',
+    sobrenome: '',
+    email: '',
+    senha: '',
   });
-
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const validarSenha = (senha) => {
-    const temMaiuscula = /[A-Z]/.test(senha);
-    const temMinuscula = /[a-z]/.test(senha);
-    const temTamanho = senha.length >= 6;
+  const toggleShowPassword = () => setShowPassword(!showPassword);
 
-    if (!temMaiuscula)
-      return "A senha deve conter pelo menos uma letra maiúscula.";
-    if (!temMinuscula)
-      return "A senha deve conter pelo menos uma letra minúscula.";
-    if (!temTamanho) return "A senha deve ter no mínimo 6 caracteres.";
-    return "";
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    const hasLowerCase = /[a-z]/.test(formData.senha);
+    const hasUpperCase = /[A-Z]/.test(formData.senha);
+    const hasNumber = /\d/.test(formData.senha);
+    const isValidLength = formData.senha.length >= 8;
 
-    const erroSenha = validarSenha(formData.senha);
-    if (erroSenha) {
-      setError(erroSenha);
+    if (!hasLowerCase || !hasUpperCase || !hasNumber || !isValidLength) {
+      alert('A senha deve ter no mínimo 8 caracteres, incluindo letra minúscula, maiúscula e número.');
       return;
     }
-
-    if (formData.senha !== formData.confirmarSenha) {
-      setError("Senhas diferentes.");
-      return;
-    }
-
-    setError("");
-    alert("Usuário cadastrado com sucesso!");
+    console.log('Registro com:', formData);
   };
-
-  const temMaiuscula = /[A-Z]/.test(formData.senha);
-  const temMinuscula = /[a-z]/.test(formData.senha);
-  const temTamanho = formData.senha.length >= 6;
 
   return (
-    <div style={estilos.container}>
-      <div style={estilos.logo}>Biblion</div>
-
-      <form style={estilos.formulario} onSubmit={handleSubmit}>
-        <h2>Cadastro de Usuário</h2>
-
-        <input
-          type="text"
-          name="nome"
-          placeholder="Nome"
-          value={formData.nome}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="sobrenome"
-          placeholder="Sobrenome"
-          value={formData.sobrenome}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="password"
-          name="senha"
-          placeholder="Senha"
-          value={formData.senha}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="password"
-          name="confirmarSenha"
-          placeholder="Confirmar Senha"
-          value={formData.confirmarSenha}
-          onChange={handleChange}
-          required
-        />
-
-        {/* Agora os requisitos ficam embaixo do campo Confirmar Senha */}
-        <div style={estilos.requisitosContainer}>
-          <div style={estilos.requisitosTitulo}>Requisitos da senha:</div>
-          <ul style={estilos.requisitosLista}>
-            <li
-              style={temMaiuscula ? estilos.requisitoValido : estilos.requisitoInvalido}
-            >
-              {temMaiuscula ? "✓" : "✗"} 1 letra maiúscula
-            </li>
-            <li
-              style={temMinuscula ? estilos.requisitoValido : estilos.requisitoInvalido}
-            >
-              {temMinuscula ? "✓" : "✗"} 1 letra minúscula
-            </li>
-            <li
-              style={temTamanho ? estilos.requisitoValido : estilos.requisitoInvalido}
-            >
-              {temTamanho ? "✓" : "✗"} pelo menos 6 caracteres
-            </li>
-          </ul>
-        </div>
-
-        {error && <p style={estilos.error}>{error}</p>}
-
-        <button type="submit" style={estilos.botao}>
-          Cadastrar
-        </button>
-      </form>
+    <div className="login-container">
+      <div className="login-box">
+        <img src={livroIcon} alt="Book Icon" className="login-icon" />
+        <h2>Criar uma conta</h2>
+        <p>Já possui uma conta? <Link to="/login-usuario">Login</Link></p>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>Nome</label>
+            <input
+              type="text"
+              name="nome"
+              value={formData.nome}
+              onChange={handleChange}
+              placeholder="Digite seu nome"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Sobrenome</label>
+            <input
+              type="text"
+              name="sobrenome"
+              value={formData.sobrenome}
+              onChange={handleChange}
+              placeholder="Digite seu sobrenome"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Digite seu email"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Senha</label>
+            <div className="password-input">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="senha"
+                value={formData.senha}
+                onChange={handleChange}
+                placeholder="Digite sua senha"
+                required
+              />
+              <span className="password-toggle" onClick={toggleShowPassword}>
+                👁️
+              </span>
+            </div>
+            <div className="password-rules">
+              <label>
+                <input type="checkbox" checked={/[a-z]/.test(formData.senha)} readOnly />
+                A senha deve ter uma letra minúscula
+              </label>
+              <label>
+                <input type="checkbox" checked={/[A-Z]/.test(formData.senha)} readOnly />
+                A senha deve ter uma letra maiúscula
+              </label>
+              <label>
+                <input type="checkbox" checked={/\d/.test(formData.senha)} readOnly />
+                A senha deve ter um número
+              </label>
+            </div>
+          </div>
+          <button type="submit">Criar Conta</button>
+        </form>
+      </div>
     </div>
   );
-}
-
-const estilos = {
-  container: {
-    fontFamily: "Arial, sans-serif",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#f5f5f5",
-    position: "relative",
-  },
-  logo: {
-    position: "absolute",
-    top: "20px",
-    left: "20px",
-    fontSize: "20px",
-    fontWeight: "bold",
-    color: "#333",
-  },
-  formulario: {
-    backgroundColor: "#fff",
-    padding: "40px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-    display: "flex",
-    flexDirection: "column",
-    width: "400px",
-    gap: "12px",
-  },
-  requisitosContainer: {
-    backgroundColor: "#fafafa",
-    padding: "8px 12px",
-    borderRadius: "8px",
-    border: "1px solid #eee",
-    fontSize: "14px",
-  },
-  requisitosTitulo: {
-    marginBottom: "6px",
-    fontSize: "13px",
-    color: "#333",
-  },
-  requisitosLista: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  },
-  requisitoValido: {
-    color: "#2e7d32",
-    marginBottom: "4px",
-    fontSize: "14px",
-  },
-  requisitoInvalido: {
-    color: "#c62828",
-    marginBottom: "4px",
-    fontSize: "14px",
-  },
-  error: {
-    color: "red",
-    fontSize: "14px",
-  },
-  botao: {
-    backgroundColor: "#4CAF50",
-    color: "white",
-    padding: "10px",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "16px",
-  },
 };
+
+export default RegistroUsuario;
