@@ -31,7 +31,17 @@ export const authService = {
                 return response.data;
             }
         } catch (error) {
-            throw new Error(error.response.data.message);
+            const errorData = error.response.data;
+
+            const {message, status, timestamp, path} = errorData;
+
+            console.error("Erro durante o cadastro:", {
+                mensagem: message,
+                statusCode: status,
+                url: path,
+            });
+
+            throw new Error(message);
         }
     }
 }
