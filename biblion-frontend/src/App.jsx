@@ -1,20 +1,18 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import RegistroUsuario from "./pages/RegistroUsuario.jsx";
-import LoginUsuario from "./pages/LoginUsuario.jsx";
+import {BrowserRouter as Router, Route, Routes, Link, Navigate} from "react-router-dom";
+import LoginPage from "./features/auth/pages/LoginPage.jsx";
+import RegisterPage from "./features/auth/pages/RegisterPage.jsx";
 
 function App() {
-  return (
-    <Router>
-      <div>
-        <Routes>
-          <Route path="/login-usuario" element={<LoginUsuario />} />
-          <Route path="/registro-usuario" element={<RegistroUsuario />} />
-          <Route path="/" element={<LoginUsuario />} />
-        </Routes>
-      </div>
-    </Router>
-  );
-}
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate to="/auth/login"/>}/>;
 
+                <Route path="/auth/login" element={<LoginPage/>}/>
+                <Route path="/auth/register" element={<RegisterPage/>}/>
+            </Routes>
+        </Router>
+    );
+}
 export default App;
